@@ -81,7 +81,7 @@ public class maine {
 			for (int i = 0 ; i < nombre_reduit.size();i++){
 				for (int j = 0 ; j < nombre_reduit.size();j++){
 					//System.out.println(i +  " " + j + " "+cycle.get(i).suivant + " " + cycle.get(j).suivant);
-					if (j != i+1 && j != i-& && j != i){
+					if (j != i+1 && j != i-1& && j != i){
 						if (matrice_couts[cycle.get(i).index][cycle.get(i+1).index] + matrice_couts[cyclee.get(j).index][cyclee.get(j+1).suivant] >matrice_couts[cyclee.get(i).index][cyclee.get(j).index] + matrice_couts[cycle.get(i).suivant][j] ){
 							cycle.get(cycle.get(i).suivant).precedent = j;
 							cycle.get(cycle.get(j).suivant).precedent = i;
@@ -144,7 +144,7 @@ public class maine {
 			if (min_cout > cout_chemins[i]){
 				chemin_mini = list_chemin.get(i);
 			}
-			min_cout = Math.min( min_cout, cout_chemins[i]);
+			min_cout = Math.min( min_cout, cout_chemins[i]); 
 
 		}
 		for (int i = 0 ; i< chemin_mini.size();i++){
