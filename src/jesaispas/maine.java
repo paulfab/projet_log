@@ -39,7 +39,7 @@ public class maine {
 		for (int i = 0 ; i < 5; i ++){
 			nombre_reduit.add(fontaines.get(i));
 		}
-		
+
 		solution_exact(nombre_reduit, cout);
 		solution_2_opt(nombre_reduit,cout);
 
@@ -47,66 +47,9 @@ public class maine {
 
 	}
 	public static double solution_2_opt(ArrayList<Fontaine> nombre_reduit,double [][] matrice_couts_original){
-		/*ArrayList<Arrete> cycle = new ArrayList<Arrete>();
-		for (int i = 0 ; i < nombre_reduit.size(); i ++){
-			if (i ==0){
-				cycle.add(new Arrete(1,nombre_reduit.size()-1,nombre_reduit.get(i)));
-			}
-			else if(i == nombre_reduit.size()-1) {
-				cycle.add(new Arrete(0,i-1,nombre_reduit.get(i)));
-			}
-			else{
-				cycle.add(new Arrete(i+1,i-1,nombre_reduit.get(i)));
-			}
-		}*/
-		ArrayList<Fontaine> cyclee = new ArrayList<Fontaine>();
-		for (int i = 0 ; i < nombre_reduit.size(); i ++){
-			cyclee.add(nombre_reduit.get(i));
-		}
-		
-		double matrice_couts [][] = new double[200][200];
-		for (int i = 0 ; i < nombre_reduit.size();i++){
-			for (int j = 0 ; j < nombre_reduit.size();j++){	
-				matrice_couts[i][j]= matrice_couts_original[cyclee.get(i).indice][cyclee.get(j).indice];
-				//System.out.print(matrice_couts[i][j] +  " ");
-			}
-			//System.out.println("");
-		}
-		
-		//cycle.add(cycle.get);
-	
-		boolean amelioration = true;
-		while (amelioration == true){
-			amelioration = false;
-			for (int i = 0 ; i < nombre_reduit.size();i++){
-				for (int j = 0 ; j < nombre_reduit.size();j++){
-					//System.out.println(i +  " " + j + " "+cycle.get(i).suivant + " " + cycle.get(j).suivant);
-					if (j != i+1 && j != i-1& && j != i){
-						if (matrice_couts[cycle.get(i).index][cycle.get(i+1).index] + matrice_couts[cyclee.get(j).index][cyclee.get(j+1).suivant] >matrice_couts[cyclee.get(i).index][cyclee.get(j).index] + matrice_couts[cycle.get(i).suivant][j] ){
-							cycle.get(cycle.get(i).suivant).precedent = j;
-							cycle.get(cycle.get(j).suivant).precedent = i;
-							int stock = cycle.get(j).suivant;
-							cycle.get(j).suivant = cycle.get(i).suivant;
-							cycle.get(i).suivant = stock;
-							System.out.println("us" + i +  " " + j + " "+cycle.get(i).suivant + " " + cycle.get(j).suivant);
-
-							amelioration = true;
-
-						}
-					}
-				}
-			}
-		}
-		
-		double cout =0;
-		int ind = 0;
-		for (int i =0;i < nombre_reduit.size();i++){
-			System.out.println(ind +  " " + cycle.get(ind).suivant );
-			cout += matrice_couts[ind][cycle.get(ind).suivant];
-			ind = cycle.get(ind).suivant;
-		}
-		System.out.println("Solution Approche : " + cout);
-		return cout;
+		Two_opt two_opt  = new Two_opt(nombre_reduit,matrice_couts_original);
+		two_opt.exec();
+		return two_opt.cout();
 	}
 	
 	
@@ -148,7 +91,7 @@ public class maine {
 
 		}
 		for (int i = 0 ; i< chemin_mini.size();i++){
-			System.out.print(chemin_mini.get(i).indice + " ");
+			System.out.print(chemin_mini.get(i).indice + " " + matrice_couts[chemin_mini.get(i).indice][chemin_mini.get((i+1) % (chemin_mini.size()-1)).indice] + " ");
 		}
 		System.out.println("Solution exact : " +min_cout);
 		return min_cout;
