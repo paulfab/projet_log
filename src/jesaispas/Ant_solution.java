@@ -6,12 +6,27 @@ public class Ant_solution {
 	
 	double NOMBRE_FOURMIS = 100;
 	Graph graph;
+	double best_cost = 100000000.;
+	ArrayList<Fontaine> best_path;
 	
 	public Ant_solution(ArrayList<Fontaine> fontaines,double[][] couts){
 		graph = new Graph(fontaines,couts);
 	}
 	
-
+	public void exec(){
+		for(int i = 0 ; i<NOMBRE_FOURMIS ; i++){
+			Ant ant  = new Ant(graph.graph);
+			while(ant.get_next_node(graph) == 0){
+			}
+			ant.produce_pheromone(graph);
+			if (ant.current_cost < best_cost){
+				best_cost = ant.current_cost;
+				best_path = ant.visited;
+			}
+			
+		}
+		
+	}
 
 }
 
@@ -69,7 +84,7 @@ class Graph{
 	ArrayList<Fontaine> graph;
 	double cout[][];
 	double pheromone[][];
-	double best_cost = 100000000.;
+
 	
 	
 	public Graph(ArrayList<Fontaine> fontaines, double[][] tab_couts){
