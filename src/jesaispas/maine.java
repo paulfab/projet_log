@@ -36,15 +36,24 @@ public class maine {
 		}
 		
 		ArrayList<Fontaine> nombre_reduit = new ArrayList<Fontaine>();
-		for (int i = 0 ; i < 5; i ++){
+		for (int i = 0 ; i < 15; i ++){
 			nombre_reduit.add(fontaines.get(i));
 		}
 
-		solution_exact(nombre_reduit, cout);
+		//solution_exact(nombre_reduit, cout);
 		solution_2_opt(nombre_reduit,cout);
+		solution_ant(nombre_reduit,cout);
+		
 
 		
 
+	}
+	public static double solution_ant(ArrayList<Fontaine> nombre_reduit,double [][] matrice_couts_original){
+		Ant_solution temp = new Ant_solution(nombre_reduit,matrice_couts_original);
+		temp.exec();
+		System.out.println(temp.cout());
+		return temp.cout();
+		
 	}
 	public static double solution_2_opt(ArrayList<Fontaine> nombre_reduit,double [][] matrice_couts_original){
 		Two_opt two_opt  = new Two_opt(nombre_reduit,matrice_couts_original);

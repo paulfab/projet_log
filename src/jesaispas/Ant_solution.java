@@ -16,32 +16,44 @@ public class Ant_solution {
 	public void exec(){
 		for(int i = 0 ; i<NOMBRE_FOURMIS ; i++){
 			Ant ant  = new Ant(graph.graph);
-			while(ant.get_next_node(graph) == 0){
+			while(ant.get_next_node(graph) == 0){ //determination d'un chemin
 			}
-			ant.produce_pheromone(graph);
+			ant.produce_pheromone(graph); // deposer les pheromone sur le chemin
 			if (ant.current_cost < best_cost){
 				best_cost = ant.current_cost;
 				best_path = ant.visited;
+
 			}
 			
 		}
 		
 	}
+	
+	public double cout(){
+		System.out.print("Ant_solution ");
+		for(int i =0;i< best_path.size();i++){
+			System.out.print(best_path.get(i).indice + " ");
+		}
+		System.out.println("");
+		return best_cost;
+	}
 
 }
 
 class Ant{
-	ArrayList<Fontaine> visited;
-	ArrayList<Fontaine> never_visited;
-	double size_path=0;
+	ArrayList<Fontaine> visited=new ArrayList<Fontaine>();
+	ArrayList<Fontaine> never_visited=new ArrayList<Fontaine>();
 	int current_node = 0;
 	double current_cost = 0;
 	double capital_pheromone=10;
 	
 	public Ant(ArrayList<Fontaine> fontaines){
-		for(int i =0; i < fontaines.size() -1; i++){
+		for(int i =1; i < fontaines.size() ; i++){
 			never_visited.add(fontaines.get(i));
+
 		}
+		//System.out.println("");
+		visited.add(fontaines.get(0));
 	}
 	
 	public int get_next_node(Graph graph){
@@ -50,9 +62,9 @@ class Ant{
 		for (int i=0 ; i< never_visited.size();i++){
 			total_pheromone += graph.pheromone[current_node][never_visited.get(i).indice];
 		}
-		double rando = Math.random()*total_pheromone;
+		double rando = Math.random()*total_pheromone; // rando est un nombre entre 0 et la totalité des pheromones qui partent de cet arc
 		
-		double cost=0;
+		double cost=graph.pheromone[current_node][never_visited.get(0).indice];
 		int ind = 0;
 		while(cost < rando){
 			ind++;
@@ -60,17 +72,20 @@ class Ant{
 		}
 		visited.add(0,never_visited.get(ind));
 		never_visited.remove(ind);
-		size_path +=  graph.cout[current_node][ind];
-		current_node = ind;
+		current_cost +=  graph.cout[current_node][visited.get(0).indice];
+		//System.out.print(current_cost +  " ");
+		current_node = visited.get(0).indice;
 		if (never_visited.size() == 0){
+			current_cost += graph.cout[current_node][0];
+			visited.add(0,visited.get(visited.size()-1));
 			return -1;
 		}
 		return 0;
 	}
 	
 	public void produce_pheromone(Graph graph){
-		visited.add(visited.get(0));
-		for(int i = 0; i < graph.graph.size();i++){
+		//visited.add(visited.get(0));
+		for(int i = 0; i < graph.graph.size()-1;i++){
 			int ind1= visited.get(i).indice;
 			int ind2 = visited.get(i+1).indice;
 			graph.pheromone[ind1][ind2] += graph.cout[ind1][ind2]*current_cost/capital_pheromone;
@@ -81,7 +96,7 @@ class Ant{
 }
 
 class Graph{
-	ArrayList<Fontaine> graph;
+	ArrayList<Fontaine> graph=new ArrayList<Fontaine>();
 	double cout[][];
 	double pheromone[][];
 
@@ -96,7 +111,7 @@ class Graph{
 				pheromone[i][j] = 1;
 				//System.out.print(matrice_couts[i][j] +  " ");
 			}
-		graph.add(fontaines.get(i));
+			graph.add(fontaines.get(i));
 			//System.out.println("");
 		}
 	}

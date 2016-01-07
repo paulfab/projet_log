@@ -47,13 +47,13 @@ public class Two_opt {
 	public double cout(){
 		double cout =0;
 		for (int i =0;i < chemin.size()-1;i++){
-			System.out.print( chemin.indice(i)  + " " +matrice_couts[chemin.indice(i)][chemin.indice(i+1) ] +  " " );
+			System.out.print( chemin.indice(i)  + " " );//+matrice_couts[chemin.indice(i)][chemin.indice(i+1) ] +  " " );
 			cout += matrice_couts[chemin.indice(i)][chemin.indice(i+1) ];
 		}
-		System.out.print( chemin.indice(chemin.size()-1)  + " " +matrice_couts[chemin.indice(chemin.size()-1)][chemin.indice(0) ] +  " " );
+		System.out.print( chemin.indice(chemin.size()-1)  + " ");// +matrice_couts[chemin.indice(chemin.size()-1)][chemin.indice(0) ] +  " " );
 		cout += matrice_couts[chemin.indice(chemin.size()-1)][chemin.indice(0) ];
-		System.out.println(matrice_couts[1][4]);
-		System.out.println("Solution Approche : " + cout);
+		//System.out.println(matrice_couts[1][4]);
+		System.out.println("Solution 2 opt : " + cout);
 		return cout;
 	}
 }
