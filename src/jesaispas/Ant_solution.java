@@ -16,10 +16,10 @@ public class Ant_solution {
 	public void exec(){
 		for(int i = 0 ; i<NOMBRE_FOURMIS ; i++){
 			Ant ant  = new Ant(graph.graph);
-			while(ant.get_next_node(graph) == 0){ //determination d'un chemin
+			while (ant.get_next_node(graph)) { //determination d'un chemin
 			}
 			ant.produce_pheromone(graph); // deposer les pheromone sur le chemin
-			if (ant.current_cost < best_cost){
+			if (ant.current_cost < best_cost) {
 				best_cost = ant.current_cost;
 				best_path = ant.visited;
 
@@ -29,15 +29,17 @@ public class Ant_solution {
 		
 	}
 	
-	public double cout(){
+	public void cout(){
 		System.out.print("Ant_solution ");
 		for(int i =0;i< best_path.size();i++){
 			System.out.print(best_path.get(i).indice + " ");
 		}
 		System.out.println("");
+	}
+	
+	public double getCost() {
 		return best_cost;
 	}
-
 }
 
 class Ant{
@@ -56,7 +58,7 @@ class Ant{
 		visited.add(fontaines.get(0));
 	}
 	
-	public int get_next_node(Graph graph){
+	public Boolean get_next_node(Graph graph){
 		
 		double total_pheromone =0;
 		for (int i=0 ; i< never_visited.size();i++){
@@ -78,9 +80,9 @@ class Ant{
 		if (never_visited.size() == 0){
 			current_cost += graph.cout[current_node][0];
 			visited.add(0,visited.get(visited.size()-1));
-			return -1;
+			return false;
 		}
-		return 0;
+		return true;
 	}
 	
 	public void produce_pheromone(Graph graph){

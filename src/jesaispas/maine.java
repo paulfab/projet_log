@@ -51,8 +51,9 @@ public class maine {
 	public static double solution_ant(ArrayList<Fontaine> nombre_reduit,double [][] matrice_couts_original){
 		Ant_solution temp = new Ant_solution(nombre_reduit,matrice_couts_original);
 		temp.exec();
-		System.out.println(temp.cout());
-		return temp.cout();
+		temp.cout()
+		System.out.println(temp.getCost());
+		return temp.getCost();
 		
 	}
 	public static double solution_2_opt(ArrayList<Fontaine> nombre_reduit,double [][] matrice_couts_original){
