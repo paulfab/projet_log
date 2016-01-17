@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;;
@@ -12,57 +13,54 @@ import java.util.ArrayList;;
 
 
 public class maine {
-
+	static boolean coordinate = true; // calcul les distance a partir des coordonées GPS si faux, et les vrai longeurs et affiche les instructions si vrai
+	static String [][] instructions = new String[109][109];
 	public static void main(String[] args) throws IOException {
-		boolean coordinate = true; // calcul les distance a partir des coordonées GPS si vrai, et les vrai longeurs s faux
 		double [][] cout = new double [109][109];
 		ArrayList<Fontaine> fontaines = new ArrayList<Fontaine>();
+		
+		File file = new File("fontaines.csv");
+		System.out.println(file.exists());
+		
+		FileReader fr = new FileReader(file);
+		BufferedReader br = new BufferedReader(fr);
+		br.readLine();
+		int ind = 0;
+		for (String line = br.readLine();line !=null;line=br.readLine()){
+			Fontaine font = new Fontaine(Double.parseDouble(line.split(",")[1]),Double.parseDouble(line.split(",")[2]),line.split(",")[0],ind);
+			ind++;
+			fontaines.add(font);
+		}
 		if (coordinate){
-			File file = new File("vrai_fontaine.csv");
-			System.out.println(file.exists());
-			FileReader fr = new FileReader(file);
-			BufferedReader br = new BufferedReader(fr);
-			br.readLine();
-			for (String line = br.readLine();line !=null;line=br.readLine()){
+			File files = new File("vrai_fontaine.csv");
+			System.out.println(files.exists());
+			FileReader frs = new FileReader(files);
+			BufferedReader brs = new BufferedReader(frs);
+
+			brs.readLine();
+			for (String line = brs.readLine();line !=null;line=brs.readLine()){
 				cout[Integer.parseInt(line.split(",")[0])-1][Integer.parseInt(line.split(",")[1])-1]= Integer.parseInt(line.split(",")[2]);
+				instructions[Integer.parseInt(line.split(",")[0])-1][Integer.parseInt(line.split(",")[1])-1] = line.split(",")[3];
+				
 			}	
-			for (int j = 0 ; j< 109;j++){
-				Fontaine font = new Fontaine(0.,0.,"",j);
-				fontaines.add(font);
-				}
 		}
 		else{
-			File file = new File("fontaines.csv");
-			System.out.println(file.exists());
-			
-			FileReader fr = new FileReader(file);
-			BufferedReader br = new BufferedReader(fr);
-			br.readLine();
-			int ind = 0;
-			for (String line = br.readLine();line !=null;line=br.readLine()){
-				Fontaine font = new Fontaine(Double.parseDouble(line.split(",")[1]),Double.parseDouble(line.split(",")[2]),line.split(",")[0],ind);
-				ind++;
-				fontaines.add(font);
-			}
-	
 			for (int i = 0;i< 109;i++){
 				for (int j = 0 ; j< 109;j++){
 					cout[i][j] = distance(fontaines.get(i).lat,fontaines.get(i).lon,fontaines.get(j).lat,fontaines.get(j).lon);
-					//System.out.print(cout[i][j] + " ");
 				}
-					//System.out.println("");
 			}
 		}
 
 		
 		ArrayList<Fontaine> nombre_reduit = new ArrayList<Fontaine>();
-		for (int i = 0 ; i < 15; i ++){
+		for (int i = 0 ; i < 109; i ++){
 			nombre_reduit.add(fontaines.get(i));
 		}
 
 		
 		//solution_exact(nombre_reduit, cout);
-		solution_2_opt(nombre_reduit,cout);
+		//solution_2_opt(nombre_reduit,cout);
 		solution_ant(nombre_reduit,cout);
 		
 
@@ -74,12 +72,26 @@ public class maine {
 		temp.exec();
 		temp.cout();
 		System.out.println(temp.getCost());
+		if (coordinate){
+			rendu_carte(temp.best_path);
+			/*for(int i = 0 ; i < temp.best_path.size()-1;i++){
+				System.out.println(instructions[temp.best_path.get(i).indice][temp.best_path.get(i+1).indice] + "\n");
+			}
+			System.out.println(instructions[temp.best_path.get(temp.best_path.size()-1).indice][temp.best_path.get(0).indice] + "\n");
+		*/}
 		return temp.getCost();
 		
 	}
 	public static double solution_2_opt(ArrayList<Fontaine> nombre_reduit,double [][] matrice_couts_original){
 		Two_opt two_opt  = new Two_opt(nombre_reduit,matrice_couts_original);
 		two_opt.exec();
+		if (coordinate){
+			rendu_carte(two_opt.chemin.chemin);
+			for(int i = 0 ; i < two_opt.chemin.size()-1;i++){
+				System.out.println(instructions[two_opt.chemin.get(i).indice][two_opt.chemin.get(i+1).indice] + "\n");
+			}
+			System.out.println(instructions[two_opt.chemin.get(two_opt.chemin.size()-1).indice][two_opt.chemin.get(0).indice] + "\n");
+		}
 		return two_opt.cout();
 	}
 	
@@ -140,6 +152,41 @@ public class maine {
 			cout += matrice[font.get(i).indice][font.get(i-1).indice];
 		}
 		return cout;
+	}
+	
+	public static void rendu_carte(ArrayList<Fontaine> fonts){
+		File f  = new File("fontaines.js");
+		try {
+			FileWriter fw = new FileWriter(f);
+			fw.write("		function initialiser() { \n"
+				+ "var latlng = new google.maps.LatLng(48.856614, 2.3522219000000177);\n"
+				+ "var options = {\n"
+				+"	center: latlng,\n"
+				+"	zoom: 13,\n"
+				+"	mapTypeId: google.maps.MapTypeId.ROADMAP\n"
+				+"};\n"
+				+	"var carte = new google.maps.Map(document.getElementById(\"carte\"), options);\n"
+				+ "var parcoursBus = [");
+			for (int i = 0 ; i < fonts.size();i++){
+				fw.write("new google.maps.LatLng(" + fonts.get(i).lat + "," + fonts.get(i).lon + "),\n");
+			}
+			fw.write("new google.maps.LatLng(" + fonts.get(0).lat + "," + fonts.get(0).lon + ")\n];");
+
+			fw.write("var traceParcoursBus = new google.maps.Polyline({\n"
+					+ "path: parcoursBus,//chemin du tracé\n"
+					+ "strokeColor: \"#FF0000\",//couleur du tracé\n"
+					+ "strokeOpacity: 1.0,//opacité du tracé\n"
+					+ "strokeWeight: 2//grosseur du tracé\n"
+					+ "});"
+					+ "traceParcoursBus.setMap(carte);");
+			
+			fw.write("}");
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

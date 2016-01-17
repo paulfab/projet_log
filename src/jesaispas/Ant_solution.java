@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Ant_solution {
 	
-	double NOMBRE_FOURMIS = 100;
+	double NOMBRE_FOURMIS = 30000;
 	Graph graph;
 	double best_cost = 100000000.;
 	ArrayList<Fontaine> best_path;
@@ -18,8 +18,8 @@ public class Ant_solution {
 			Ant ant  = new Ant(graph.graph);
 			while (ant.get_next_node(graph)) { //determination d'un chemin
 			}
-			ant.produce_pheromone(graph); // deposer les pheromone sur le chemin
 			if (ant.current_cost < best_cost) {
+				ant.produce_pheromone(graph); // deposer les pheromone sur le chemin
 				best_cost = ant.current_cost;
 				best_path = ant.visited;
 
@@ -90,7 +90,7 @@ class Ant{
 		for(int i = 0; i < graph.graph.size()-1;i++){
 			int ind1= visited.get(i).indice;
 			int ind2 = visited.get(i+1).indice;
-			graph.pheromone[ind1][ind2] += graph.cout[ind1][ind2]*current_cost/capital_pheromone;
+			graph.pheromone[ind1][ind2] += 100*graph.cout[ind1][ind2]*current_cost/capital_pheromone;
 		}
 	}
 	
