@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;;
 
 
@@ -13,33 +14,53 @@ import java.util.ArrayList;;
 public class maine {
 
 	public static void main(String[] args) throws IOException {
+		boolean coordinate = true; // calcul les distance a partir des coordonées GPS si vrai, et les vrai longeurs s faux
 		double [][] cout = new double [109][109];
-		System.out.println(distance (40,50,41,52));
-		File file = new File("fontaines.csv");
-		System.out.println(file.exists());
 		ArrayList<Fontaine> fontaines = new ArrayList<Fontaine>();
-		FileReader fr = new FileReader(file);
-		BufferedReader br = new BufferedReader(fr);
-		br.readLine();
-		int ind = 0;
-		for (String line = br.readLine();line !=null;line=br.readLine()){
-			Fontaine font = new Fontaine(Double.parseDouble(line.split(",")[1]),Double.parseDouble(line.split(",")[2]),line.split(",")[0],ind);
-			ind++;
-			fontaines.add(font);
-		}
-		for (int i = 0;i< 109;i++){
+		if (coordinate){
+			File file = new File("vrai_fontaine.csv");
+			System.out.println(file.exists());
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			br.readLine();
+			for (String line = br.readLine();line !=null;line=br.readLine()){
+				cout[Integer.parseInt(line.split(",")[0])-1][Integer.parseInt(line.split(",")[1])-1]= Integer.parseInt(line.split(",")[2]);
+			}	
 			for (int j = 0 ; j< 109;j++){
-				cout[i][j] = distance(fontaines.get(i).lat,fontaines.get(i).lon,fontaines.get(j).lat,fontaines.get(j).lon);
-				//System.out.print(cout[i][j] + " ");
-			}
-			//System.out.println("");
+				Fontaine font = new Fontaine(0.,0.,"",j);
+				fontaines.add(font);
+				}
 		}
+		else{
+			File file = new File("fontaines.csv");
+			System.out.println(file.exists());
+			
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			br.readLine();
+			int ind = 0;
+			for (String line = br.readLine();line !=null;line=br.readLine()){
+				Fontaine font = new Fontaine(Double.parseDouble(line.split(",")[1]),Double.parseDouble(line.split(",")[2]),line.split(",")[0],ind);
+				ind++;
+				fontaines.add(font);
+			}
+	
+			for (int i = 0;i< 109;i++){
+				for (int j = 0 ; j< 109;j++){
+					cout[i][j] = distance(fontaines.get(i).lat,fontaines.get(i).lon,fontaines.get(j).lat,fontaines.get(j).lon);
+					//System.out.print(cout[i][j] + " ");
+				}
+					//System.out.println("");
+			}
+		}
+
 		
 		ArrayList<Fontaine> nombre_reduit = new ArrayList<Fontaine>();
 		for (int i = 0 ; i < 15; i ++){
 			nombre_reduit.add(fontaines.get(i));
 		}
 
+		
 		//solution_exact(nombre_reduit, cout);
 		solution_2_opt(nombre_reduit,cout);
 		solution_ant(nombre_reduit,cout);
