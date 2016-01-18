@@ -61,38 +61,35 @@ public class maine {
 		
 		//solution_exact(nombre_reduit, cout);
 		//solution_2_opt(nombre_reduit,cout);
+		//solution_2_opt(solution_ant(nombre_reduit,cout), cout);
+		//solution_ant(solution_2_opt(nombre_reduit,cout),cout);
 		solution_ant(nombre_reduit,cout);
 		
 
 		
 
 	}
-	public static double solution_ant(ArrayList<Fontaine> nombre_reduit,double [][] matrice_couts_original){
+	public static ArrayList<Fontaine> solution_ant(ArrayList<Fontaine> nombre_reduit,double [][] matrice_couts_original){
 		Ant_solution temp = new Ant_solution(nombre_reduit,matrice_couts_original);
 		temp.exec();
 		temp.cout();
 		System.out.println(temp.getCost());
 		if (coordinate){
 			rendu_carte(temp.best_path);
-			/*for(int i = 0 ; i < temp.best_path.size()-1;i++){
-				System.out.println(instructions[temp.best_path.get(i).indice][temp.best_path.get(i+1).indice] + "\n");
-			}
-			System.out.println(instructions[temp.best_path.get(temp.best_path.size()-1).indice][temp.best_path.get(0).indice] + "\n");
-		*/}
-		return temp.getCost();
+			instructions(temp.best_path, instructions);
+		}
+		//return temp.getCost();
+		return temp.best_path;
 		
 	}
-	public static double solution_2_opt(ArrayList<Fontaine> nombre_reduit,double [][] matrice_couts_original){
+	public static ArrayList<Fontaine> solution_2_opt(ArrayList<Fontaine> nombre_reduit,double [][] matrice_couts_original){
 		Two_opt two_opt  = new Two_opt(nombre_reduit,matrice_couts_original);
 		two_opt.exec();
 		if (coordinate){
 			rendu_carte(two_opt.chemin.chemin);
-			for(int i = 0 ; i < two_opt.chemin.size()-1;i++){
-				System.out.println(instructions[two_opt.chemin.get(i).indice][two_opt.chemin.get(i+1).indice] + "\n");
-			}
-			System.out.println(instructions[two_opt.chemin.get(two_opt.chemin.size()-1).indice][two_opt.chemin.get(0).indice] + "\n");
+			instructions(two_opt.chemin.chemin, instructions);
 		}
-		return two_opt.cout();
+		return two_opt.chemin.chemin;
 	}
 	
 	
@@ -154,6 +151,23 @@ public class maine {
 		return cout;
 	}
 	
+	public static void instructions(ArrayList<Fontaine> fonts, String [][] instructions){
+		File f = new File("instructions.html");
+		try {
+			FileWriter fw = new FileWriter(f);
+			fw.write("<head> <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /></head><body>");
+			for(int i = 0 ; i < fonts.size()-1;i++){
+				fw.write(instructions[fonts.get(i).indice][fonts.get(i+1).indice] + "\n");
+			}
+			fw.write(instructions[fonts.get(fonts.size()-1).indice][fonts.get(0).indice] + "\n");
+			fw.write("</body>");
+			fw.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
 	public static void rendu_carte(ArrayList<Fontaine> fonts){
 		File f  = new File("fontaines.js");
 		try {

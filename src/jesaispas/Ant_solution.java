@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Ant_solution {
 	
-	double NOMBRE_FOURMIS = 30000;
+	double NOMBRE_FOURMIS = 200000;
 	Graph graph;
 	double best_cost = 100000000.;
 	ArrayList<Fontaine> best_path;
@@ -19,12 +19,15 @@ public class Ant_solution {
 			while (ant.get_next_node(graph)) { //determination d'un chemin
 			}
 			if (ant.current_cost < best_cost) {
-				ant.produce_pheromone(graph); // deposer les pheromone sur le chemin
 				best_cost = ant.current_cost;
 				best_path = ant.visited;
+				
 
 			}
-			
+			ant.produce_pheromone(graph, best_cost); // deposer les pheromone sur le chemin
+
+			System.out.println(ant.current_cost);
+
 		}
 		
 	}
@@ -63,35 +66,46 @@ class Ant{
 		double total_pheromone =0;
 		for (int i=0 ; i< never_visited.size();i++){
 			total_pheromone += graph.pheromone[current_node][never_visited.get(i).indice];
+			//System.out.print(graph.pheromone[current_node][never_visited.get(i).indice] + " " );
 		}
+		//System.out.println("\n");
 		double rando = Math.random()*total_pheromone; // rando est un nombre entre 0 et la totalité des pheromones qui partent de cet arc
 		
 		double cost=graph.pheromone[current_node][never_visited.get(0).indice];
+
 		int ind = 0;
 		while(cost < rando){
 			ind++;
 			cost+=graph.pheromone[current_node][never_visited.get(ind).indice];
 		}
+		//System.out.print("cost " + cost + " rando " + rando +"\n");
+		Fontaine fontaine = never_visited.get(ind);
 		visited.add(0,never_visited.get(ind));
-		never_visited.remove(ind);
+		never_visited.remove(fontaine);
 		current_cost +=  graph.cout[current_node][visited.get(0).indice];
 		//System.out.print(current_cost +  " ");
 		current_node = visited.get(0).indice;
 		if (never_visited.size() == 0){
 			current_cost += graph.cout[current_node][0];
-			visited.add(0,visited.get(visited.size()-1));
+			//visited.add(0,visited.get(visited.size()-1));
 			return false;
 		}
 		return true;
 	}
 	
-	public void produce_pheromone(Graph graph){
+	public void produce_pheromone(Graph graph, double best_cost){
 		//visited.add(visited.get(0));
 		for(int i = 0; i < graph.graph.size()-1;i++){
+
 			int ind1= visited.get(i).indice;
 			int ind2 = visited.get(i+1).indice;
-			graph.pheromone[ind1][ind2] += 100*graph.cout[ind1][ind2]*current_cost/capital_pheromone;
+			graph.pheromone[ind1][ind2] *= 1.5/(current_cost-best_cost +1);
+			//graph.pheromone[ind1][ind2] *= (1 +1.5*0.1/(current_cost - best_cost+1));
+
+			graph.pheromone[ind2][ind1] = graph.pheromone[ind1][ind2];
+			//System.out.print(graph.pheromone[ind1][ind2] + " ");
 		}
+		//System.out.println("");
 	}
 	
 	

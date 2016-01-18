@@ -21,7 +21,10 @@ public class Two_opt {
 	
 	public void exec()
 	{
+		double cout_best = 1000000.;
+		double cout_best_cent_ago = 100000000;
 		boolean amelioration = true;
+		int iteration=0;
 		while (amelioration == true){
 			amelioration = false;
 			//chemin.print();
@@ -41,16 +44,24 @@ public class Two_opt {
 					}
 				}
 			}
+			iteration++;
+			cout_best = Math.min(cout_best,  cout());
+			if (iteration % 100 == 0 ){
+				if ((cout_best_cent_ago - cout_best) < 1){
+					amelioration = false;
+				}
+				cout_best_cent_ago = cout_best;
+			}
 		}
 	}
 	
 	public double cout(){
 		double cout =0;
 		for (int i =0;i < chemin.size()-1;i++){
-			System.out.print( chemin.indice(i)  + " " );//+matrice_couts[chemin.indice(i)][chemin.indice(i+1) ] +  " " );
+			//System.out.print( chemin.indice(i)  + " " );//+matrice_couts[chemin.indice(i)][chemin.indice(i+1) ] +  " " );
 			cout += matrice_couts[chemin.indice(i)][chemin.indice(i+1) ];
 		}
-		System.out.print( chemin.indice(chemin.size()-1)  + " ");// +matrice_couts[chemin.indice(chemin.size()-1)][chemin.indice(0) ] +  " " );
+		//System.out.print( chemin.indice(chemin.size()-1)  + " ");// +matrice_couts[chemin.indice(chemin.size()-1)][chemin.indice(0) ] +  " " );
 		cout += matrice_couts[chemin.indice(chemin.size()-1)][chemin.indice(0) ];
 		//System.out.println(matrice_couts[1][4]);
 		System.out.println("Solution 2 opt : " + cout);
