@@ -1,10 +1,11 @@
 package jesaispas;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Ant_solution {
 	
-	double NOMBRE_FOURMIS = 200000;
+	double NOMBRE_FOURMIS = 10000;
 	Graph graph;
 	double best_cost = 100000000.;
 	ArrayList<Fontaine> best_path;
@@ -51,6 +52,7 @@ class Ant{
 	int current_node = 0;
 	double current_cost = 0;
 	double capital_pheromone=10;
+	//Random generator = new Random(100);
 	
 	public Ant(ArrayList<Fontaine> fontaines){
 		for(int i =1; i < fontaines.size() ; i++){
@@ -70,7 +72,7 @@ class Ant{
 		}
 		//System.out.println("\n");
 		double rando = Math.random()*total_pheromone; // rando est un nombre entre 0 et la totalité des pheromones qui partent de cet arc
-		
+		//System.out.println(Math.random());
 		double cost=graph.pheromone[current_node][never_visited.get(0).indice];
 
 		int ind = 0;

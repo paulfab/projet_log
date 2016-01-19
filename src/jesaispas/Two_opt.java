@@ -24,34 +24,32 @@ public class Two_opt {
 		double cout_best = 1000000.;
 		double cout_best_cent_ago = 100000000;
 		boolean amelioration = true;
-		int iteration=0;
+		int taille = chemin.size();
 		while (amelioration == true){
 			amelioration = false;
 			//chemin.print();
-			for (int i = 0 ; i < chemin.size()-1;i++){
-				for (int j = 0 ; j < chemin.size()-1;j++){
+			for (int i = 0 ; i < taille-1;i++){
+				for (int j = i ; j < taille;j++){
 					//System.out.println(i +  " " + j + " ");
 					if (j != i+1 && j != i-1 && j != i){
-						if (matrice_couts[chemin.indice(i)][chemin.indice(i+1)] + matrice_couts[chemin.indice(j)][chemin.indice(j+1)] > 
-							matrice_couts[chemin.indice(i)][chemin.indice(j)] + matrice_couts[chemin.indice(i+1)][chemin.indice(j+1)] ){
-								
+						if (matrice_couts[chemin.indice(i)][chemin.indice(i+1)] + matrice_couts[chemin.indice(j)][chemin.indice((j+1) % taille)] > 
+							matrice_couts[chemin.indice(i)][chemin.indice(j)] + matrice_couts[chemin.indice(i+1)][chemin.indice((j+1) % taille)] ){
+							System.out.println(matrice_couts[chemin.indice(i)][chemin.indice(i+1)] + matrice_couts[chemin.indice(j)][chemin.indice((j+1) % taille)] - 
+							matrice_couts[chemin.indice(i)][chemin.indice(j)] + matrice_couts[chemin.indice(i+1)][chemin.indice((j+1) % taille)]);
+							cout();
+							//chemin.print();
 							chemin.transform(i,j);
 							//chemin.print();
-							//System.out.println("i " + i + " j " + j + " ");
+							System.out.println("i " + i + " j " + j + " ");
 							amelioration = true;
 
 						}
 					}
 				}
 			}
-			iteration++;
 			cout_best = Math.min(cout_best,  cout());
-			if (iteration % 100 == 0 ){
-				if ((cout_best_cent_ago - cout_best) < 1){
-					amelioration = false;
-				}
-				cout_best_cent_ago = cout_best;
-			}
+
+			
 		}
 	}
 	
@@ -83,6 +81,7 @@ class Chemin{
 	}
 	
 	public void permute(int i, int j){
+
 		Fontaine temp = chemin.get(i);
 		chemin.set(i,chemin.get(j));
 		chemin.set(j, temp);
@@ -99,7 +98,7 @@ class Chemin{
 	
 	public void transform(int i,int j){
 		if (j>i){
-			for (int k=i+1;k<j-k+i+1;k++){
+			for (int k=i+1;k<j+1-1;k++){
 				permute(k,j-k+i+1);
 			}
 		}
@@ -111,9 +110,10 @@ class Chemin{
 	public void print(){
 
 		for (int i = 0 ; i < chemin.size(); i ++){
-			System.out.print(indice(i) + " ");
-			System.out.println("");
+			System.out.print(chemin.get(i).indice + " ");
+
 		}
+		System.out.println("");
 	}
 	
 }

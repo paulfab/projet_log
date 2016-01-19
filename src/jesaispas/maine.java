@@ -42,7 +42,8 @@ public class maine {
 				cout[Integer.parseInt(line.split(",")[0])-1][Integer.parseInt(line.split(",")[1])-1]= Integer.parseInt(line.split(",")[2]);
 				instructions[Integer.parseInt(line.split(",")[0])-1][Integer.parseInt(line.split(",")[1])-1] = line.split(",")[3];
 				
-			}	
+			}
+			brs.close();
 		}
 		else{
 			for (int i = 0;i< 109;i++){
@@ -51,7 +52,7 @@ public class maine {
 				}
 			}
 		}
-
+		br.close();
 		
 		ArrayList<Fontaine> nombre_reduit = new ArrayList<Fontaine>();
 		for (int i = 0 ; i < 109; i ++){
