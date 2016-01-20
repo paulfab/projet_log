@@ -40,7 +40,7 @@ public class Two_opt {
 							//chemin.print();
 							chemin.transform(i,j);
 							//chemin.print();
-							System.out.println("i " + i + " j " + j + " ");
+						//	System.out.println("i " + i + " j " + j + " ");
 							amelioration = true;
 
 						}
@@ -62,7 +62,7 @@ public class Two_opt {
 		//System.out.print( chemin.indice(chemin.size()-1)  + " ");// +matrice_couts[chemin.indice(chemin.size()-1)][chemin.indice(0) ] +  " " );
 		cout += matrice_couts[chemin.indice(chemin.size()-1)][chemin.indice(0) ];
 		//System.out.println(matrice_couts[1][4]);
-		System.out.println("Solution 2 opt : " + cout);
+		System.out.println( cout);
 		return cout;
 	}
 }

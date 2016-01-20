@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Ant_solution {
 	
-	double NOMBRE_FOURMIS = 10000;
+	double NOMBRE_FOURMIS = 6000000;
 	Graph graph;
 	double best_cost = 100000000.;
 	ArrayList<Fontaine> best_path;
@@ -28,6 +28,7 @@ public class Ant_solution {
 			ant.produce_pheromone(graph, best_cost); // deposer les pheromone sur le chemin
 
 			System.out.println(ant.current_cost);
+
 
 		}
 		
@@ -55,12 +56,15 @@ class Ant{
 	//Random generator = new Random(100);
 	
 	public Ant(ArrayList<Fontaine> fontaines){
-		for(int i =1; i < fontaines.size() ; i++){
-			never_visited.add(fontaines.get(i));
-
+		for(int i =0; i < fontaines.size() ; i++){
+			if (i != 0){
+				never_visited.add(fontaines.get(i));
+			}
+				
 		}
 		//System.out.println("");
 		visited.add(fontaines.get(0));
+		current_node = fontaines.get(0).indice;
 	}
 	
 	public Boolean get_next_node(Graph graph){
@@ -101,9 +105,11 @@ class Ant{
 
 			int ind1= visited.get(i).indice;
 			int ind2 = visited.get(i+1).indice;
-			graph.pheromone[ind1][ind2] *= 1.5/(current_cost-best_cost +1);
-			//graph.pheromone[ind1][ind2] *= (1 +1.5*0.1/(current_cost - best_cost+1));
-
+			//graph.pheromone[ind1][ind2] *= (1+1.03/(current_cost-best_cost +1)); // 290 km double NOMBRE_FOURMIS = 900000
+			//graph.pheromone[ind1][ind2] *= (1 +7/(current_cost - best_cost+80)); // 255km double NOMBRE_FOURMIS = 1300000;
+			//graph.pheromone[ind1][ind2] *= (1 +3/(current_cost - best_cost+160));//   137km double NOMBRE_FOURMIS = 6 millions;
+			//graph.pheromone[ind1][ind2] *= (1 +4/(current_cost - best_cost+80)); // 186km double NOMBRE_FOURMIS = 3000000;
+			graph.pheromone[ind1][ind2] *= (1 +3/(current_cost - best_cost+180)); // 139km
 			graph.pheromone[ind2][ind1] = graph.pheromone[ind1][ind2];
 			//System.out.print(graph.pheromone[ind1][ind2] + " ");
 		}

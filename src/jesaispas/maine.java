@@ -62,9 +62,9 @@ public class maine {
 		
 		//solution_exact(nombre_reduit, cout);
 		//solution_2_opt(nombre_reduit,cout);
-		//solution_2_opt(solution_ant(nombre_reduit,cout), cout);
+		solution_2_opt(solution_ant(nombre_reduit,cout), cout);
 		//solution_ant(solution_2_opt(nombre_reduit,cout),cout);
-		solution_ant(nombre_reduit,cout);
+		//solution_ant(nombre_reduit,cout);
 		
 
 		
